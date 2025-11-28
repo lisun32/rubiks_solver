@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rubiks_solver"
+version = "0.0.0"
+description = "Skeleton package for Rubik's Cube solver utilities."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{name = "Your Name", email = "you@example.com"}]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+rubiks-solver = "rubiks_solver.cli:main"
