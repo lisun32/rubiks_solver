@@ -1,8 +1,13 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Sequence
 from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection # type: ignore
 from typing import Literal
-from .perm import PermAction, PermActionChain, PermGroup
+from .perm import (
+    PermSingleAction,
+    PermCompositeAction,
+    PermGroup,
+    PermAction,
+)
 
 class Cube2x2:
     def __init__(self):
@@ -98,17 +103,17 @@ class Cube2x2:
         ax.set_aspect("equal")
         return ax
 
-    def apply(self, action: Optional[Union[PermAction, PermActionChain]] = None):
+    def apply(self, action: Optional[PermAction] = None):
         if action is None:
             return
-        self.state = (PermAction(self.state).inverse() * action).action.inverse().m
+        self.state = (PermSingleAction(self.state).inverse() * action).inversed.m
 
     def reset(self):
         self.state = list(range(1, 25))
 
-    def solve(self, bsgs: List[List[PermActionChain]]):
+    def solve(self, bsgs: Sequence[Sequence[PermCompositeAction]]):
         S24 = PermGroup(24)
-        perm = PermAction(self.state)
+        perm = PermSingleAction(self.state)
         word = S24.word_generation(perm, bsgs)
         if word is not None:
             print("Solution found:", word)
@@ -139,7 +144,8 @@ class Cube2x2:
             sorted_actual_colors = "".join(sorted(actual_colors))
             sorted_actual_indices = VERTEX[sorted_actual_colors]
             actual_indices_mapping = {
-                c: sorted_actual_indices[sorted_actual_colors.index(c)] for c in actual_colors
+                c: sorted_actual_indices[sorted_actual_colors.index(c)]
+                for c in actual_colors
             }
 
             for idx, c in enumerate(actual_colors):
